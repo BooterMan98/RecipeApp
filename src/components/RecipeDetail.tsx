@@ -1,17 +1,20 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 import * as React from 'react';
 import { recipe } from '../typeDefs';
+import Recipe from '../views/Recipe';
 
 
 interface detailProps {
   mode: "view" | "edit" | "create" | "list",
   handleClose: any
+  recipeData: recipe
 }
 
 interface detailState {
  name: string,
  ingredients: string,
- instructions: string
+ instructions: string,
+ id?: number
 }
 export default class RecipeDetail extends React.Component<detailProps, detailState> {
    title = {
@@ -30,10 +33,30 @@ export default class RecipeDetail extends React.Component<detailProps, detailSta
 
   constructor(props:detailProps) {
     super(props)
-    this.state = {name: "", ingredients: "", instructions: ""}
+    console.log(props.recipeData)
+    this.state= {ingredients: "", instructions: "", name: ""}
+    if (props.recipeData != undefined) {
+      this.state = {...props.recipeData}
+    }
  }
+
+ componentDidUpdate(prevProps:detailProps) {
+console.log(this.props.recipeData, prevProps.recipeData)
+    if (this.props.recipeData != undefined) {
+      if (prevProps.recipeData != undefined) {
+        if ( this.props.recipeData.id != prevProps.recipeData.id)
+        this.updateAndNotify()
+      } else
+      this.updateAndNotify()
+    }
+  }
+  
+updateAndNotify(){
+  console.log(this.props.recipeData)
+  this.setState({...this.props.recipeData})
+}
+
  handleChange(e:any) {
-  console.log(e.target.id)
   if (e.target.id === "ingredients") {
     this.setState({ingredients: e.target.value})
   } else if (e.target.id === "instructions") {
@@ -50,16 +73,22 @@ hc = this.handleChange.bind(this)
       ingredients: this.state.ingredients,
       instructions: this.state.instructions
     }
-
-     
-
-    this.props.handleClose(e, true, false, recipe)
+    
+    if (this.props.mode === "create") {
+      this.props.handleClose(e, true, false, recipe)
+    } else if (this.props.mode === "edit") {
+      this.props.handleClose(e, false, false, recipe)
     }
-
+    }
+    doClose(e:any) {
+      this.props.handleClose(e,false, true)
+    }
   doA = this.doAction.bind(this)
+
+  doC = this.doClose.bind(this)
     render() {
       const disabled = this.props.mode === "view" ? true : false
-        return <Dialog onClose={this.props.handleClose} open={ (() => {if (this.props.mode != "list") return true; else return false}) () }>
+        return <Dialog onClose={this.doC} open={ (() => {if (this.props.mode != "list") return true; else return false}) () }>
         <DialogTitle>{this.title[this.props.mode]}</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -110,7 +139,7 @@ hc = this.handleChange.bind(this)
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.props.handleClose}>Cancelar</Button>
+          <Button onClick={this.doC}>Cancelar</Button>
           <Button onClick={this.doA}>Guardar Receta</Button>
         </DialogActions>
       </Dialog>

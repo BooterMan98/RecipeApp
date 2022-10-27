@@ -15,6 +15,14 @@ interface listState {
 
 class RecipeList extends React.Component<listProps, listState> {
 
+view(e:any, id:number) {
+    this.props.viewRecipe(e, id)
+}
+
+edit(e:any, id:number) {
+    this.props.editRecipe(e, id)
+}
+
 render() {
     return <TableContainer component={Card}>
         <Table>
@@ -40,13 +48,12 @@ render() {
                         <Button fullWidth color="error" onClick={this.props.deleteRecipe} >Eliminar</Button>
                     </TableCell>
                 </TableRow>
-                {this.props.recipes.map((recipe) => <TableRow key={recipe.name} style={{cursor: 'pointer'}} onClick={this.props.viewRecipe}>
-
+                {this.props.recipes.map((recipe) => <TableRow key={recipe.id} style={{cursor: 'pointer'}} onClick={(e:any) => this.view(e, recipe.id!)}>
                     <TableCell component="th">
                         {recipe.name}
                     </TableCell>
                     <TableCell >
-                        <Button fullWidth onClick={this.props.editRecipe}>Editar</Button>
+                        <Button fullWidth onClick={(e:any) => this.edit(e, recipe.id!)}>Editar</Button>
                     </TableCell>
                     <TableCell>
                         <Button fullWidth color="error" onClick={this.props.deleteRecipe} >Eliminar</Button>

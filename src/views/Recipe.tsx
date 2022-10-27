@@ -12,7 +12,7 @@ type recipeProps = {
 
 interface recipeState {
     recipes: recipe[],
-    target: string | null,
+    target: number | null,
     state: "list" | "view" | "edit" | "create" | "delete" 
 
 }
@@ -25,13 +25,13 @@ class Recipe extends React.Component<recipeProps, recipeState> {
         // No llames this.setState() aquí!
         this.state = { recipes: [], target: null, state: "list"};
       }
-    editRecipe(e: any, id:string) {
+    editRecipe(e: any, id:number) {
       e.stopPropagation()
-      this.setState({state:"edit"})
+      this.setState({state:"edit", target: id})
     }
-    viewRecipe(e: any, id:string) {
+    viewRecipe(e: any, id:number) {
       e.stopPropagation()
-      this.setState({state: "view"})
+      this.setState({state: "view", target: id})
     }
     deleteRecipe(e: any, id:string) {
       e.stopPropagation()
@@ -45,12 +45,18 @@ class Recipe extends React.Component<recipeProps, recipeState> {
         let recipes = this.state.recipes
         // se ve si se agrega o edita wea
         if (isNew && recipe != undefined) {
+          recipe.id = this.state.recipes.length + 1
           recipes.push(recipe)
           this.setState({recipes: recipes})
           // se agrega nueva receta
 
         } else {
+          console.log("editando archivo")
+          console.log(this.state.target!)
           // se edita receta anterior
+          recipe!.id = this.state.target! 
+          recipes[this.state.target! - 1 ] = recipe!
+          this.setState({recipes: recipes})
         }
       }
       
@@ -65,12 +71,13 @@ class Recipe extends React.Component<recipeProps, recipeState> {
     showL= this.showList.bind(this)
     createR = this.createRecipe.bind(this)
     render() {
+        console.log(this.state.recipes, this.state.target);
       return <Container style={{padding: "2rem"}}>
-
+        
       <Stack spacing={2}>
         <Button onClick={this.createR} >Crear nueva receta</Button>
         <RecipeList recipes={this.state.recipes} deleteRecipe={this.deleteR} editRecipe={this.editR} viewRecipe={this.viewR}/>
-        {(() => {if (this.state.state !== "delete") return <RecipeDetail mode={this.state.state} handleClose={this.showL}/>}) ()}
+        {(() => {if (this.state.state !== "delete") return <RecipeDetail recipeData={this.state.recipes[this.state.target! - 1]} mode={this.state.state} handleClose={this.showL}/>}) ()}
       </Stack>
         
         
