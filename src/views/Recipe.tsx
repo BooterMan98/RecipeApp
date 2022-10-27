@@ -33,10 +33,13 @@ class Recipe extends React.Component<recipeProps, recipeState> {
       e.stopPropagation()
       this.setState({state: "view", target: id})
     }
-    deleteRecipe(e: any, id:string) {
+    deleteRecipe(e: any, id:number) {
       e.stopPropagation()
+      let recipes = this.state.recipes
 
-      this.setState({state: "delete"})
+      let newRecipes = recipes.filter(recipe => recipe.id != id)
+      this.setState({recipes: newRecipes})
+      
     }
     showList(e: any,  isNew: boolean, wasCancelled: boolean, recipe?: recipe) {
       e.stopPropagation()

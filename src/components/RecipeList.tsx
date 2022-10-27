@@ -56,7 +56,7 @@ render() {
                         <Button fullWidth onClick={(e:any) => this.edit(e, recipe.id!)}>Editar</Button>
                     </TableCell>
                     <TableCell>
-                        <Button fullWidth color="error" onClick={this.props.deleteRecipe} >Eliminar</Button>
+                        <Button fullWidth color="error" onClick={(e) => this.props.deleteRecipe(e, recipe.id!)} >Eliminar</Button>
                     </TableCell>
                 </TableRow>
             )}
