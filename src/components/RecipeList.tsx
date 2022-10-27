@@ -1,10 +1,12 @@
 import { Button, Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import * as React from 'react';
+import { recipe } from '../typeDefs';
 
 interface listProps {
 editRecipe: any,
 viewRecipe: any,
 deleteRecipe: any,
+recipes: recipe[]
 }
 
 interface listState {
@@ -19,7 +21,7 @@ render() {
             <TableHead>
                 <TableRow>
                     <TableCell align='left'>
-                        Nombre
+                        Receta
                     </TableCell>
                     <TableCell colSpan={2} align='center'>
                         Acciones
@@ -27,17 +29,30 @@ render() {
                 </TableRow>
             </TableHead>
             <TableBody>
-            <TableRow onClick={this.props.viewRecipe}>
+            <TableRow style={{cursor: 'pointer'}} onClick={this.props.viewRecipe}>
                     <TableCell component="th">
                         Nombre
                     </TableCell>
                     <TableCell >
-                        <Button onClick={this.props.editRecipe}>Editar</Button>
+                        <Button fullWidth onClick={this.props.editRecipe}>Editar</Button>
                     </TableCell>
                     <TableCell>
-                        <Button>Eliminar</Button>
+                        <Button fullWidth color="error" onClick={this.props.deleteRecipe} >Eliminar</Button>
                     </TableCell>
                 </TableRow>
+                {this.props.recipes.map((recipe) => <TableRow key={recipe.name} style={{cursor: 'pointer'}} onClick={this.props.viewRecipe}>
+
+                    <TableCell component="th">
+                        {recipe.name}
+                    </TableCell>
+                    <TableCell >
+                        <Button fullWidth onClick={this.props.editRecipe}>Editar</Button>
+                    </TableCell>
+                    <TableCell>
+                        <Button fullWidth color="error" onClick={this.props.deleteRecipe} >Eliminar</Button>
+                    </TableCell>
+                </TableRow>
+            )}
 
             </TableBody>
         </Table>
